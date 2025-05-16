@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Azure.Core.Pipeline;
@@ -10,6 +11,8 @@ namespace FinanceTrackerAPI.DataModel
     {
         public static Dictionary<int, Category>? cache ;
         public int CategoryId { get; set; }
+        [Required(AllowEmptyStrings = false)]
+        [MinLength(1, ErrorMessage = "Name must be at least 1 character.")]
         public string Name { get; set; } = string.Empty;
         public int? ParentCategoryId { get; set; } = null;
 

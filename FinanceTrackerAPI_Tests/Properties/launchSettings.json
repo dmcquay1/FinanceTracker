@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FinanceTrackerAPI_Tests": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Shadow\\source\\repos\\FinanceTracker\\FinanceTrackerAPI\\bin\\Debug\\net9.0"
+    }
+  }
+}

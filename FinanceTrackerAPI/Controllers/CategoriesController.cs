@@ -79,7 +79,7 @@ namespace FinanceTrackerAPI.Controllers
   
         // POST: api/Categories
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> CreateCategory(Category category)
         {
             if (Category.cache == null || Category.cache.Count() < _context.Categories.Count())
             {
@@ -102,6 +102,10 @@ namespace FinanceTrackerAPI.Controllers
             }
             try
             {
+                if(_context.Categories.Any(e => e.ParentCategoryId == id))
+                {
+                    return BadRequest("Cannot delete category with child categories.");
+                }
                 _context.Categories.Remove(category);
                 await _context.SaveChangesAsync();
             }
