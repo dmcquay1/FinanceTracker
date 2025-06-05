@@ -19,10 +19,15 @@ namespace FinanceTrackerAPI.DataModel
         // Navigation property
         [JsonIgnore]
         public Category? ParentCategory { get; set; } = null;
-
+        [NotMapped]
+        public List<Category> ChildCategories { get; set; } = new List<Category>();
         [NotMapped]
         public string FullCategoryPath => ComputeFullCategoryPath(this);
-
+        [NotMapped]
+        public int? Level => FullCategoryPath.Split(" > ").Count();
+        public int UserId { get; set; }
+        [JsonIgnore]
+        public User? User { get; set; } = null;
         // Recursive method to compute the full path
         public static string ComputeFullCategoryPath(Category category)
         {
@@ -48,7 +53,6 @@ namespace FinanceTrackerAPI.DataModel
             var fullPath = $"{parentPath} > {category.Name}";
 
             // Cache the result
-            cache[category.CategoryId] = new Category { Name = fullPath }; // Simplified for caching
             return fullPath;
         }
     }

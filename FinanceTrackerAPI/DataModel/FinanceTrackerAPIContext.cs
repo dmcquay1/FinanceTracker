@@ -9,10 +9,12 @@ namespace FinanceTrackerAPI.DataModel
             : base(options)
         {
         }
+        public DbSet<User> Users { get; set; } = null!;
         public DbSet<Transaction> Transactions { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Transaction>()
                 .HasKey(t => t.TransactionId);
             modelBuilder.Entity<Category>(entity =>
@@ -21,7 +23,7 @@ namespace FinanceTrackerAPI.DataModel
 
                 // Configure the relationship
                 entity.HasOne(e => e.ParentCategory)
-                      .WithMany()
+                      .WithMany(e => e.ChildCategories)
                       .HasForeignKey(e => e.ParentCategoryId)
                       .OnDelete(DeleteBehavior.Restrict) // Prevent cascading delete
                       .IsRequired(false); // ParentCategoryId is nullable
@@ -29,6 +31,10 @@ namespace FinanceTrackerAPI.DataModel
                       
                 // Ignore the computed property
                 entity.Ignore(e => e.FullCategoryPath);
+
+                entity.HasOne(e => e.User)
+                .WithMany(u => u.Categories)
+                        .HasForeignKey(e => e.UserId);
             });
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
